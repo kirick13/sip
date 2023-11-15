@@ -117,10 +117,10 @@ Sip uses Web Streams API — and core part of Sip modules is [TransformStream](h
 
 Sip have only one dependency — [picomatch](https://npmjs.com/package/picomatch) to match files by glob.
 
-| Package | Packages installed | Bundle size |
+| Package | Packages installed | `node_modules` size |
 | --- | --- | --- |
-| `gulp` | 336 | 828 233 bytes |
-| `sipjs` | 2 (**99% less**) | 60 611 bytes (**93% smaller**) |
+| `gulp` | 336 | 8 433 389 bytes |
+| `sipjs` | 2 (**99% less**) | 105 589 bytes (**98% smaller**) |
 
 ### Bun
 
