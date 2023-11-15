@@ -3,9 +3,7 @@
 Sip is lightweight, native and fast Gulp alternative. It is **8x faster** than Gulp on NodeJS and **4x faster** than Gulp on Bun.
 
 > **Note:** This project is in early development stage.
-<br>
 > By now, it works only with [Bun](https://bun.sh) to achieve maximum performance utilizing ultra-fast [File I/O](https://bun.sh/docs/api/file-io).
-<br>
 > In the future, it will be able to work with NodeJS as well.
 
 ## Getting started
