@@ -1,6 +1,9 @@
 {
-	"name": "sipjs",
-	"version": "0.1.0-beta.1",
+	"name": "@sipjs/sip",
+	"publishConfig": {
+		"access": "public"
+	},
+	"version": "0.1.1",
 	"description": "Lightweight, native and fast Gulp alternative",
 	"main": "src/main.js",
 	"type": "module",

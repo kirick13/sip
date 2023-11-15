@@ -8,16 +8,16 @@ Sip is lightweight, native and fast Gulp alternative. It is **8x faster** than G
 
 ## Getting started
 
-First, add package `sipjs` to your project:
+First, add package `@sipjs/sip` to your project:
 
 ```bash
-bun install sipjs
+bun install @sipjs/sip
 ```
 
 Then, create `sip.config.js` in the root of your project:
 
 ```js
-import { pipeline, read, write, gzip } from 'sipjs';
+import { pipeline, read, write, gzip } from '@sipjs/sip';
 
 export const html = pipeline(
     // read EJS file inside current working directory by glob
@@ -36,7 +36,7 @@ export const html = pipeline(
 Run it:
 
 ```bash
-bunx sipjs html
+bunx @sipjs/sip html
 ```
 
 ## Create your own modules
@@ -45,7 +45,7 @@ Let's create a module that will minify HTML files. Create two files: `/modules/h
 
 ```js
 import { minify }  from '@minify-html/node';
-import { SipFile } from 'sip';
+import { SipFile } from '@sipjs/sip';
 
 // export your module as default
 export default function htmlMinify(options) {
@@ -66,7 +66,7 @@ export default function htmlMinify(options) {
 }
 ```
 
-... and `/modules/html-minify/task.js` with module declaration:
+... and `/modules/html-minify/declaration.js` with module declaration:
 
 ```js
 export function minifyHTML(options) {
@@ -81,8 +81,8 @@ export function minifyHTML(options) {
 Now use that module in your pipeline:
 
 ```js
-import { pipeline, read, write, gzip } from 'sipjs';
-import { htmlMinify } from './modules/html-minify/task.js';
+import { pipeline, read, write, gzip } from '@sipjs/sip';
+import { htmlMinify } from './modules/html-minify/declaration.js';
 
 export const html = pipeline(
     read('source/**/*.ejs'),
@@ -117,7 +117,7 @@ Sip uses Web Streams API — and core part of Sip modules is [TransformStream](h
 
 Sip have only one dependency — [picomatch](https://npmjs.com/package/picomatch) to match files by glob.
 
-| | `gulp@4.0.2` | `sipjs@0.1.0` | Difference |
+| | `gulp@4.0.2` | `@sipjs/sip@0.1.0` | Difference |
 | --- | --- | --- | --- |
 | Packages installed | 336 | 2 | **99% less** |
 | `node_modules` size | ≈ 8 433 389 bytes | ≈ 105 589 bytes | **98% smaller** |

@@ -92,11 +92,7 @@ async function readDirectory(path, result = [], level = 0) {
 export default async function read(...globs) {
 	const base_path = getGlobsBasePath(globs);
 
-	// const isMatch = picomatch(globs);
-	// console.log('isMatch', isMatch);
-
 	const paths = await readDirectory(PATH_ROOT);
-	console.log('paths', paths);
 
 	for (const glob of globs) {
 		for (let index = 0; index < paths.length; index++) {
@@ -106,7 +102,6 @@ export default async function read(...globs) {
 			}
 		}
 	}
-	console.log('paths matched', paths);
 
 	for (const [ index, path ] of paths.entries()) {
 		if (path.startsWith(base_path) !== true) {
