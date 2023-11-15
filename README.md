@@ -21,15 +21,15 @@ import { pipeline, read, write, gzip } from 'sipjs';
 
 export const html = pipeline(
     // read EJS file inside current working directory by glob
-	read('source/**/*.html'),
+    read('source/**/*.html'),
     // write files to build directory
-	write('build'),
+    write('build'),
     // compress the same file — extenstion will be changed to .html.gz
-	gzip({
-		level: 9,
-	}),
+    gzip({
+        level: 9,
+    }),
     // write compressed files to build directory
-	write('build'),
+    write('build'),
 );
 ```
 
@@ -49,20 +49,20 @@ import { SipFile } from 'sip';
 
 // export your module as default
 export default function htmlMinify(options) {
-	return new TransformStream({
-		transform(file, controller) {
-			const result = minify(
-				file.get(
-					SipFile.TYPE_NODEJS_BUFFER,
-				),
-				options,
-			);
+    return new TransformStream({
+        transform(file, controller) {
+            const result = minify(
+                file.get(
+                    SipFile.TYPE_NODEJS_BUFFER,
+                ),
+                options,
+            );
 
-			file.set(result);
+            file.set(result);
 
-			controller.enqueue(file);
-		},
-	});
+            controller.enqueue(file);
+        },
+    });
 }
 ```
 
@@ -85,7 +85,7 @@ import { pipeline, read, write, gzip } from 'sipjs';
 import { htmlMinify } from './modules/html-minify/task.js';
 
 export const html = pipeline(
-	read('source/**/*.ejs'),
+    read('source/**/*.ejs'),
     htmlMinify({
         do_not_minify_doctype: true,
         keep_html_and_head_opening_tags: true,
@@ -93,11 +93,11 @@ export const html = pipeline(
         minify_js: true,
         minify_css_level_1: true,
     }),
-	write('build'),
-	gzip({
-		level: 9,
-	}),
-	write('build'),
+    write('build'),
+    gzip({
+        level: 9,
+    }),
+    write('build'),
 );
 ```
 
