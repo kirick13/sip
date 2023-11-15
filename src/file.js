@@ -92,7 +92,73 @@ class SipFileLocation {
 	}
 }
 
+const textDecoder = new TextDecoder();
+const textEncoder = new TextEncoder();
+
 export class SipFile {
+	static TYPE_ARRAY_BUFFER = Symbol('TYPE_ARRAY_BUFFER');
+	static TYPE_STRING = Symbol('TYPE_STRING');
+	static TYPE_NODEJS_BUFFER = Symbol('TYPE_NODEJS_BUFFER');
+
+	static convert(source, type) {
+		switch (type) {
+			case SipFile.TYPE_ARRAY_BUFFER:
+				if (source instanceof ArrayBuffer) {
+					return source;
+				}
+
+				if (
+					ArrayBuffer.isView(source)
+					|| source instanceof Buffer
+				) {
+					return source.buffer;
+				}
+
+				if (typeof source === 'string') {
+					return textEncoder.encode(source).buffer;
+				}
+
+				throw new Error('Cannot convert file contents to string.');
+
+			case SipFile.TYPE_STRING:
+				if (typeof source === 'string') {
+					return source;
+				}
+
+				if (
+					source instanceof ArrayBuffer
+					|| ArrayBuffer.isView(source)
+				) {
+					return textDecoder.decode(source);
+				}
+
+				if (source instanceof Buffer) {
+					return this.contents.toString();
+				}
+
+				throw new Error('Cannot convert file contents to string.');
+
+			case SipFile.TYPE_NODEJS_BUFFER:
+				if (source instanceof Buffer) {
+					return source;
+				}
+
+				if (
+					source instanceof ArrayBuffer
+					|| ArrayBuffer.isView(source)
+					|| typeof source === 'string'
+				) {
+					return Buffer.from(
+						source,
+					);
+				}
+
+				throw new Error('Cannot convert file contents to NodeJS Buffer.');
+			default:
+				throw new Error(`Unknown type "${type}" given.`);
+		}
+	}
+
 	location;
 	contents;
 
@@ -102,6 +168,20 @@ export class SipFile {
 		}
 
 		this.location = new SipFileLocation(base_path, path);
+	}
+
+	get(type) {
+		return SipFile.convert(
+			this.contents,
+			type,
+		);
+	}
+
+	set(source) {
+		this.contents = SipFile.convert(
+			source,
+			SipFile.TYPE_ARRAY_BUFFER,
+		);
 	}
 
 	async write() {

@@ -1,5 +1,5 @@
 
-import micromatch             from 'micromatch';
+import picomatch              from 'picomatch';
 import { readdir }            from 'node:fs/promises';
 import {
 	resolve as resolvePath,
@@ -92,27 +92,39 @@ async function readDirectory(path, result = [], level = 0) {
 export default async function read(...globs) {
 	const base_path = getGlobsBasePath(globs);
 
-	const paths = await readDirectory(PATH_ROOT);
-	const paths_matched = micromatch(
-		paths,
-		globs,
-	);
+	// const isMatch = picomatch(globs);
+	// console.log('isMatch', isMatch);
 
-	for (const [ index, path ] of paths_matched.entries()) {
-		if (path.startsWith(base_path)) {
-			paths_matched[index] = path.slice(base_path.length + 1);
+	const paths = await readDirectory(PATH_ROOT);
+	console.log('paths', paths);
+
+	for (const glob of globs) {
+		for (let index = 0; index < paths.length; index++) {
+			if (picomatch.isMatch(paths[index], glob) !== true) {
+				paths.splice(index, 1);
+				index--;
+			}
 		}
+	}
+	console.log('paths matched', paths);
+
+	for (const [ index, path ] of paths.entries()) {
+		if (path.startsWith(base_path) !== true) {
+			throw new Error('Invalid path found. It is probably a Sip bug.');
+		}
+
+		paths[index] = path.slice(base_path.length + 1);
 	}
 
 	return new ReadableStream({
 		async pull(controller) {
-			if (paths_matched.length === 0) {
+			if (paths.length === 0) {
 				controller.close();
 			}
 			else {
 				const file = await createSipFile(
 					base_path,
-					paths_matched.shift(),
+					paths.shift(),
 				);
 
 				controller.enqueue(file);

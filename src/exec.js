@@ -1,7 +1,20 @@
+#!/usr/bin/env node
 
 import { join as joinPath } from 'node:path';
 import { runTask }          from './run-task.js';
 import { PATH_ROOT }        from './vars.js';
+
+function stringifyTimeInterval(interval) {
+	if (interval < 0) {
+		return `${Number.parseFloat(interval.toFixed(3))} ms`;
+	}
+
+	if (interval < 1000) {
+		return `${Math.round(interval)} ms`;
+	}
+
+	return `${Number.parseFloat((interval / 1000).toFixed(2))} s`;
+}
 
 const config = await import(
 	joinPath(
@@ -12,10 +25,9 @@ const config = await import(
 
 const task = process.argv[2] ?? 'default';
 
-// console.log(task);
-// console.log(config[task]);
+console.log(`[sip] Initialization complete in ${stringifyTimeInterval(process.uptime() * 1000)}.`);
 
-const ts = performance.now();
+const ts = process.uptime();
 console.log(`[sip] Started task "${task}"...`);
 
 const { readable } = await runTask(
@@ -32,16 +44,4 @@ await new Promise((resolve) => {
 	);
 });
 
-function stringifyTimeInterval(interval) {
-	if (interval < 0) {
-		return `${Number.parseFloat(interval.toFixed(3))} ms`;
-	}
-
-	if (interval < 1000) {
-		return `${Math.round(interval)} ms`;
-	}
-
-	return `${Number.parseFloat((interval / 1000).toFixed(2))} s`;
-}
-
-console.log(`[sip] Finished task "${task}" in ${stringifyTimeInterval(performance.now() - ts)}.`);
+console.log(`[sip] Process finished in ${stringifyTimeInterval((process.uptime() - ts) * 1000)}.`);
