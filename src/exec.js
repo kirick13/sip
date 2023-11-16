@@ -40,8 +40,15 @@ await new Promise((resolve) => {
 			close() {
 				resolve();
 			},
+			abort(error) {
+				console.error(error);
+				resolve();
+			},
 		}),
 	);
 });
 
 console.log(`[sip] Process finished in ${stringifyTimeInterval((process.uptime() - ts) * 1000)}.`);
+
+// eslint-disable-next-line no-process-exit
+process.exit();

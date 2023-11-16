@@ -3,7 +3,7 @@
 	"publishConfig": {
 		"access": "public"
 	},
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"description": "Lightweight, native and fast Gulp alternative",
 	"main": "src/main.js",
 	"type": "module",
