@@ -3,12 +3,12 @@ import { mkdir }             from 'node:fs/promises';
 import {
 	dirname,
 	format as formatPath,
-	// join as joinPath,
+	join as joinPath,
 	parse as parsePath,
 	resolve as resolvePath } from 'node:path';
 import { PATH_ROOT }         from './vars.js';
 
-const PROTECTOR = Symbol('NEW_PROTECTOR');
+// const PROTECTOR = Symbol('NEW_PROTECTOR');
 
 class SipFileLocation {
 	#root = PATH_ROOT;
@@ -90,6 +90,17 @@ class SipFileLocation {
 			ext: this.#ext,
 		});
 	}
+
+	get path_relative() {
+		return formatPath({
+			dir: joinPath(
+				this.#base,
+				this.#dir,
+			),
+			name: this.#name,
+			ext: this.#ext,
+		});
+	}
 }
 
 const textDecoder = new TextDecoder();
@@ -118,7 +129,7 @@ export class SipFile {
 					return textEncoder.encode(source).buffer;
 				}
 
-				throw new Error('Cannot convert file contents to string.');
+				throw new Error('Cannot convert file contents to ArrayBuffer.');
 
 			case SipFile.TYPE_STRING:
 				if (typeof source === 'string') {
@@ -162,11 +173,7 @@ export class SipFile {
 	location;
 	contents;
 
-	constructor(base_path, path, protector) {
-		if (protector !== PROTECTOR) {
-			throw new Error('Do not use new SipFile() directly, use createSipFile() method instead.');
-		}
-
+	constructor(base_path, path) {
 		this.location = new SipFileLocation(base_path, path);
 	}
 
@@ -200,7 +207,7 @@ export class SipFile {
 		const sipFile = new SipFile(
 			this.location.root,
 			'',
-			PROTECTOR,
+			// PROTECTOR,
 		);
 
 		sipFile.location.dir = this.location.dir;
@@ -217,7 +224,7 @@ export async function createSipFile(base_path, path) {
 	const sipFile = new SipFile(
 		base_path,
 		path,
-		PROTECTOR,
+		// PROTECTOR,
 	);
 
 	const file = Bun.file(sipFile.location.path);

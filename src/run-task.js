@@ -1,5 +1,8 @@
 
-export async function runTask({ module, args }) {
+export async function runTask({
+	module,
+	args = [],
+}) {
 	const task_module = await module();
 	const result = await task_module.default(...args);
 
