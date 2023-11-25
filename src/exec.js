@@ -34,21 +34,27 @@ const { readable } = await runTask(
 	config[task],
 );
 
-await new Promise((resolve) => {
+const error = await new Promise((resolve) => {
 	readable.pipeTo(
 		new WritableStream({
 			close() {
 				resolve();
 			},
 			abort(error) {
-				console.error(error);
-				resolve();
+				resolve(error);
 			},
 		}),
 	);
 });
 
 console.log(`[sip] Process finished in ${stringifyTimeInterval((process.uptime() - ts) * 1000)}.`);
+
+if (error) {
+	console.error(error);
+
+	// eslint-disable-next-line no-process-exit
+	process.exit(1);
+}
 
 // eslint-disable-next-line no-process-exit
 process.exit();
